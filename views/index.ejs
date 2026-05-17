@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Дошка оголошень — Випуск №<%= currentPage %></title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..900&family=JetBrains+Mono:wght@400;500;700&family=Newsreader:opsz,wght@6..72,400..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="masthead">
+    <div class="masthead-bar">
+      <span>Заснована · MMXXVI</span>
+      <span><%= new Date().toLocaleDateString('uk-UA', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) %></span>
+    </div>
+    <h1 class="masthead-title"><a href="/">Дошка&nbsp;Оголошень</a></h1>
+    <div class="masthead-subbar">
+      <span class="mono">Випуск №<%= currentPage %> · Сторінка <%= currentPage %>/<%= totalPages %></span>
+      <span class="masthead-tagline">Усе, що варто знати, тиждень у тиждень</span>
+      <a href="/announcements" class="masthead-cta">Подати&nbsp;оголошення</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <form class="filters" method="GET" action="/">
+      <input
+        type="text"
+        name="search"
+        value="<%= search %>"
+        placeholder="Шукати оголошення по назві…"
+        class="filters-search"
+        aria-label="Пошук"
+      >
+      <select name="sort" class="filters-sort" aria-label="Сортування">
+        <option value="newest" <%= sort === 'newest' ? 'selected' : '' %>>Новіші спочатку</option>
+        <option value="oldest" <%= sort === 'oldest' ? 'selected' : '' %>>Старіші спочатку</option>
+      </select>
+      <button type="submit" class="btn">Застосувати</button>
+    </form>
+
+    <div class="section-head">
+      <h2>Цього випуску</h2>
+      <span class="mono">Всього оголошень: <%= total %></span>
+    </div>
+
+    <% if (announcements.length === 0) { %>
+      <p class="empty-state" data-testid="empty-state">Оголошень не знайдено</p>
+    <% } else { %>
+      <ul class="cards" data-testid="announcements-list">
+        <% announcements.forEach(function(ann, i) { %>
+          <% const cat = categoryLabels[ann.category] || { label: ann.category, emoji: '❓' }; %>
+          <li class="card" data-testid="card" style="animation-delay: <%= i * 40 %>ms">
+            <a class="card-link" href="/announcements/<%= ann.id %>">
+              <span class="card-serial">№ <%= String(ann.id).padStart(4, '0') %></span>
+              <span class="card-category" data-cat="<%= ann.category %>"><%= cat.emoji %>&nbsp;<%= cat.label %></span>
+              <h3 class="card-title"><%= ann.title %></h3>
+              <p class="card-description"><%= ann.description.substring(0, 100) %></p>
+              <div class="card-meta">
+                <span class="card-price"><%= ann.price.toFixed(2) %>&nbsp;₴</span>
+                <span class="card-date"><%= ann.createdAt.toLocaleDateString('uk-UA') %></span>
+              </div>
+            </a>
+          </li>
+        <% }) %>
+      </ul>
+
+      <% if (totalPages > 1) { %>
+        <%
+          function pageUrl(p) {
+            const params = new URLSearchParams();
+            if (search) params.set('search', search);
+            if (sort && sort !== 'newest') params.set('sort', sort);
+            params.set('page', p);
+            return '/?' + params.toString();
+          }
+        %>
+        <nav class="pagination" data-testid="pagination" aria-label="Пагінація">
+          <% if (currentPage > 1) { %>
+            <a class="btn" href="<%= pageUrl(currentPage - 1) %>" data-testid="prev-page">← Попередня</a>
+          <% } else { %>
+            <span class="btn btn-disabled" data-testid="prev-page-disabled">← Попередня</span>
+          <% } %>
+
+          <% for (let p = 1; p <= totalPages; p++) { %>
+            <% if (p === currentPage) { %>
+              <span class="btn btn-active"><%= p %></span>
+            <% } else { %>
+              <a class="btn" href="<%= pageUrl(p) %>"><%= p %></a>
+            <% } %>
+          <% } %>
+
+          <% if (currentPage < totalPages) { %>
+            <a class="btn" href="<%= pageUrl(currentPage + 1) %>" data-testid="next-page">Наступна →</a>
+          <% } else { %>
+            <span class="btn btn-disabled" data-testid="next-page-disabled">Наступна →</span>
+          <% } %>
+        </nav>
+      <% } %>
+    <% } %>
+  </main>
+
+  <footer class="footer">
+    <span>© MMXXVI · Дошка Оголошень</span>
+    <span class="footer-ornament">❖ ✦ ❖</span>
+    <span>Прес-маркер · GoIT × Neoversity</span>
+  </footer>
+</body>
+</html>

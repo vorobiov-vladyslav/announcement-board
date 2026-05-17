@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>500 — Зупиніть друкарські преси</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..900&family=JetBrains+Mono:wght@400;500;700&family=Newsreader:opsz,wght@6..72,400..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="masthead">
+    <div class="masthead-bar">
+      <span>Заснована · MMXXVI</span>
+      <span class="mono">Серверна помилка</span>
+    </div>
+    <h1 class="masthead-title"><a href="/">Дошка&nbsp;Оголошень</a></h1>
+    <div class="masthead-subbar">
+      <span class="mono">Код помилки · 500</span>
+      <span class="masthead-tagline">Технічна перерва</span>
+      <a href="/" class="mono">←&nbsp;До випуску</a>
+    </div>
+  </header>
+
+  <main class="container error-page" data-testid="error-500">
+    <p class="error-page-code">500</p>
+    <div class="error-rule"></div>
+    <h2 class="error-page-headline">Зупиніть преси</h2>
+    <p class="error-page-body">
+      Сталася серверна помилка під час підготовки сторінки.
+      Друкарі вже працюють над усуненням — спробуйте за хвилину.
+    </p>
+    <% if (typeof message !== 'undefined' && message) { %>
+      <pre class="error-message"><%= message %></pre>
+    <% } %>
+    <div>
+      <a class="btn btn-primary" href="/">Повернутися до випуску</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <span>© MMXXVI · Дошка Оголошень</span>
+    <span class="footer-ornament">❖ ✦ ❖</span>
+    <span>Прес-маркер · GoIT × Neoversity</span>
+  </footer>
+</body>
+</html>

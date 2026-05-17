@@ -1,0 +1,8 @@
+node_modules/
+*.db
+*.db-journal
+.env
+.env.test
+generated/
+.vitest-cache/
+.DS_Store

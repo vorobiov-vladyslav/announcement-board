@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Подати оголошення — Дошка Оголошень</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..900&family=JetBrains+Mono:wght@400;500;700&family=Newsreader:opsz,wght@6..72,400..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="masthead">
+    <div class="masthead-bar">
+      <span>Заснована · MMXXVI</span>
+      <span><%= new Date().toLocaleDateString('uk-UA', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) %></span>
+    </div>
+    <h1 class="masthead-title"><a href="/">Дошка&nbsp;Оголошень</a></h1>
+    <div class="masthead-subbar">
+      <span class="mono">Бланк № 47-B</span>
+      <span class="masthead-tagline">Заповніть для публікації наступного випуску</span>
+      <a href="/" class="mono">←&nbsp;До випуску</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <a class="back-link" href="/">← Назад</a>
+
+    <div class="section-head">
+      <h2>Подати оголошення</h2>
+      <span class="mono">Усі поля обов'язкові</span>
+    </div>
+
+    <p class="form-intro">
+      Заповніть бланк нижче. Редакція залишає за собою право відмовити у публікації
+      оголошень, які не відповідають вимогам валідації.
+    </p>
+
+    <form class="announcement-form" method="POST" action="/announcements" novalidate>
+
+      <fieldset class="form-field category-grid-wrap">
+        <legend class="form-field-label">
+          <span class="form-field-num">01.</span>
+          <span>Категорія</span>
+          <span class="form-field-hint">оберіть одну з чотирьох</span>
+        </legend>
+        <div class="category-grid">
+          <label>
+            <input type="radio" name="category" value="sale"
+              <%= data?.category === 'sale' ? 'checked' : '' %>>
+            <span class="cat-emoji">🛒</span>
+            <span>Продаж</span>
+          </label>
+          <label>
+            <input type="radio" name="category" value="service"
+              <%= data?.category === 'service' ? 'checked' : '' %>>
+            <span class="cat-emoji">🛠️</span>
+            <span>Послуга</span>
+          </label>
+          <label>
+            <input type="radio" name="category" value="job"
+              <%= data?.category === 'job' ? 'checked' : '' %>>
+            <span class="cat-emoji">💼</span>
+            <span>Робота</span>
+          </label>
+          <label>
+            <input type="radio" name="category" value="other"
+              <%= data?.category === 'other' ? 'checked' : '' %>>
+            <span class="cat-emoji">📦</span>
+            <span>Інше</span>
+          </label>
+        </div>
+        <% if (errors.category) { %>
+          <span class="error" data-testid="error-category"><%= errors.category %></span>
+        <% } %>
+      </fieldset>
+
+      <div class="form-field">
+        <label class="form-field-label" for="title">
+          <span class="form-field-num">02.</span>
+          <span>Назва</span>
+          <span class="form-field-hint">мін. 5 символів</span>
+        </label>
+        <input
+          type="text"
+          name="title"
+          id="title"
+          required
+          minlength="5"
+          placeholder="Коротка назва оголошення"
+          value="<%= data?.title || '' %>"
+        >
+        <% if (errors.title) { %>
+          <span class="error" data-testid="error-title"><%= errors.title %></span>
+        <% } %>
+      </div>
+
+      <div class="form-field">
+        <label class="form-field-label" for="description">
+          <span class="form-field-num">03.</span>
+          <span>Опис</span>
+          <span class="form-field-hint">мін. 10 символів</span>
+        </label>
+        <textarea
+          name="description"
+          id="description"
+          rows="6"
+          required
+          minlength="10"
+          placeholder="Детальний опис оголошення…"
+        ><%= data?.description || '' %></textarea>
+        <% if (errors.description) { %>
+          <span class="error" data-testid="error-description"><%= errors.description %></span>
+        <% } %>
+      </div>
+
+      <div class="form-field">
+        <label class="form-field-label" for="price">
+          <span class="form-field-num">04.</span>
+          <span>Ціна, ₴</span>
+          <span class="form-field-hint">додатне число</span>
+        </label>
+        <input
+          type="number"
+          name="price"
+          id="price"
+          min="0"
+          step="0.01"
+          required
+          placeholder="0.00"
+          value="<%= data?.price || '' %>"
+        >
+        <% if (errors.price) { %>
+          <span class="error" data-testid="error-price"><%= errors.price %></span>
+        <% } %>
+      </div>
+
+      <div class="form-field">
+        <label class="form-field-label" for="contactInfo">
+          <span class="form-field-num">05.</span>
+          <span>Контактна інформація</span>
+          <span class="form-field-hint">email або телефон</span>
+        </label>
+        <input
+          type="text"
+          name="contactInfo"
+          id="contactInfo"
+          required
+          minlength="5"
+          placeholder="email@example.com або +380..."
+          value="<%= data?.contactInfo || '' %>"
+        >
+        <% if (errors.contactInfo) { %>
+          <span class="error" data-testid="error-contactInfo"><%= errors.contactInfo %></span>
+        <% } %>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">✦ Опублікувати</button>
+        <a class="btn" href="/">Скасувати</a>
+      </div>
+    </form>
+  </main>
+
+  <footer class="footer">
+    <span>© MMXXVI · Дошка Оголошень</span>
+    <span class="footer-ornament">❖ ✦ ❖</span>
+    <span>Прес-маркер · GoIT × Neoversity</span>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= announcement.title %> — Дошка Оголошень</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..900&family=JetBrains+Mono:wght@400;500;700&family=Newsreader:opsz,wght@6..72,400..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="masthead">
+    <div class="masthead-bar">
+      <span>Заснована · MMXXVI</span>
+      <span><%= announcement.createdAt.toLocaleDateString('uk-UA', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) %></span>
+    </div>
+    <h1 class="masthead-title"><a href="/">Дошка&nbsp;Оголошень</a></h1>
+    <div class="masthead-subbar">
+      <span class="mono">Стаття №<%= String(announcement.id).padStart(4, '0') %></span>
+      <span class="masthead-tagline">Окрема публікація</span>
+      <a href="/announcements" class="masthead-cta">Подати&nbsp;оголошення</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <a class="back-link" href="/">← Назад до випуску</a>
+
+    <article class="announcement-detail" data-testid="announcement-detail">
+      <% const cat = categoryLabels[announcement.category] || { label: announcement.category, emoji: '❓' }; %>
+
+      <div class="detail-byline">
+        <span class="card-category" data-cat="<%= announcement.category %>"><%= cat.emoji %>&nbsp;<%= cat.label %></span>
+        <span class="card-serial" style="position: static">№ <%= String(announcement.id).padStart(4, '0') %></span>
+      </div>
+
+      <h2 class="detail-title" data-testid="title"><%= announcement.title %></h2>
+
+      <div class="detail-rule"></div>
+
+      <p class="detail-price" data-testid="price"><%= announcement.price.toFixed(2) %>&nbsp;₴</p>
+      <p class="detail-date">Опубліковано · <%= announcement.createdAt.toLocaleString('uk-UA') %></p>
+
+      <div class="detail-description" data-testid="description"><%= announcement.description %></div>
+
+      <div class="detail-contact" data-testid="contact">
+        <strong>Контактна інформація</strong>
+        <span><%= announcement.contactInfo %></span>
+      </div>
+
+      <div class="detail-actions">
+        <a class="btn" href="/">← До випуску</a>
+        <button id="delete-btn" class="btn btn-danger" data-id="<%= announcement.id %>">
+          🗑&nbsp;Видалити оголошення
+        </button>
+      </div>
+    </article>
+  </main>
+
+  <footer class="footer">
+    <span>© MMXXVI · Дошка Оголошень</span>
+    <span class="footer-ornament">❖ ✦ ❖</span>
+    <span>Прес-маркер · GoIT × Neoversity</span>
+  </footer>
+
+  <script>
+    const deleteBtn = document.querySelector('#delete-btn');
+    const announcementId = deleteBtn.dataset.id;
+
+    deleteBtn.addEventListener('click', async () => {
+      if (!confirm('Ви впевнені що хочете видалити це оголошення?')) {
+        return;
+      }
+      try {
+        const response = await fetch(`/announcements/${announcementId}`, {
+          method: 'DELETE',
+        });
+        if (response.ok) {
+          window.location.href = '/';
+        } else {
+          alert('Помилка при видаленні');
+        }
+      } catch (err) {
+        alert('Помилка при видаленні');
+      }
+    });
+  </script>
+</body>
+</html>

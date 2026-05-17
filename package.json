@@ -1,0 +1,33 @@
+{
+  "name": "announcement-board",
+  "version": "1.0.0",
+  "description": "GoIT homework — Announcement Board",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "setup": "npm run setup:env && npm run db:migrate",
+    "setup:env": "cp -n .env.example .env || true && cp -n .env.test.example .env.test || true",
+    "dev": "node server.js",
+    "start": "node server.js",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "db:migrate": "prisma migrate dev",
+    "db:studio": "prisma studio",
+    "db:reset": "prisma migrate reset --force"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^6.19.3",
+    "dotenv": "^17.4.2",
+    "ejs": "^5.0.2",
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "cheerio": "^1.2.0",
+    "prisma": "^6.19.3",
+    "supertest": "^7.2.2",
+    "vitest": "^4.1.6"
+  }
+}
